@@ -187,8 +187,13 @@ chatHistory.push({
     content:aiText
 });
 
-    document.getElementById("result").innerHTML =
-        aiText;
+document.getElementById("chatArea").innerHTML +=
+    `
+    <div class="message ai">
+        <b>AI：</b><br>
+        ${aiText}
+    </div>
+    `;
 
 }
 catch(error){

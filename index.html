@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>我的 AI 網頁</title>
+
+<style>
+
+body{
+    font-family: Arial;
+    padding:20px;
+    background:#f5f5f5;
+}
+
+textarea{
+    width:100%;
+    height:120px;
+    font-size:18px;
+}
+
+button{
+    margin-top:10px;
+    padding:10px 20px;
+    font-size:18px;
+    cursor:pointer;
+}
+
+#result{
+    margin-top:20px;
+    padding:15px;
+    background:white;
+    border-radius:10px;
+    white-space:pre-wrap;
+}
+
+
+#chatArea{
+    margin-top:20px;
+}
+
+.message{
+    padding:10px;
+    margin-bottom:10px;
+    border-radius:10px;
+    white-space:pre-wrap;
+}
+
+.user{
+    background:#dbeafe;
+}
+
+.ai{
+    background:#f3f4f6;
+}
+
+
+
+</style>
+
+</head>
+<body>
+
+<h2>AI 測試</h2>
+
+<textarea
+    id="prompt"
+    placeholder="請輸入問題"
+></textarea>
+
+<br>
+
+<button onclick="askAI()">送出</button>
+
+<div id="modelName"></div>
+<div id="chatArea"></div>
+
+<script>
+
+
+// 聊天陣列
+let chatHistory = [];
+
+document
+.getElementById("prompt")
+.addEventListener("keydown", function(event){
+
+    // 按 Enter 且不是 Shift+Enter
+    if(event.key === "Enter" && !event.shiftKey){
+
+        // 防止換行
+        event.preventDefault();
+
+        // 呼叫 AI
+        askAI();
+    }
+});
+
+async function askAI(){
+
+    const apiKey = "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";
+
+    const text =
+        document.getElementById("prompt").value;
+
+    document.getElementById("result").innerHTML =
+        "AI思考中...";
+
+
+    try{
+
+chatHistory.push({
+    role:"user",
+    content:text
+});
+
+
+document.getElementById("chatArea").innerHTML +=
+    `
+    <div class="message user">
+        <b>你：</b><br>
+        ${text}
+    </div>
+    `;
+
+
+// 自動加入目前日期
+const now = new Date();
+
+const dateText =
+    now.toLocaleString();
+
+
+    const response = await fetch(
+        "https://openrouter.ai/api/v1/chat/completions",
+        {
+            method:"POST",
+
+            headers:{
+                "Content-Type":"application/json",
+                "Authorization":"Bearer " + apiKey
+            },
+
+
+
+
+body:JSON.stringify({
+
+    model:"openrouter/free",
+
+    messages:[
+
+        {
+            role:"system",
+            content:"現在時間：" + dateText
+        },
+
+        ...chatHistory
+
+    ]
+
+})
+        }
+    );
+
+    const data = await response.json();
+
+    console.log(data);
+
+document.getElementById("modelName").innerHTML =
+    "目前模型：" + data.model;
+
+    if(data.error){
+
+        document.getElementById("result").innerHTML =
+            "API錯誤：<br>" +
+            data.error.message;
+
+        return;
+    }
+
+    const aiText =
+        data.choices[0].message.content;
+
+// 儲存回答
+chatHistory.push({
+    role:"assistant",
+    content:aiText
+});
+
+document.getElementById("chatArea").innerHTML +=
+    `
+    <div class="message ai">
+        <b>AI：</b><br>
+        ${aiText}
+    </div>
+    `;
+
+}
+catch(error){
+
+    console.log(error);
+
+    document.getElementById("result").innerHTML =
+        "系統錯誤";
+}
+}
+
+
+
+</script>
+
+</body>
+</html>

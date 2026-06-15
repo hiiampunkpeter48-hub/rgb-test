@@ -30,7 +30,13 @@ navigator.mediaDevices.getUserMedia({
 })
 .catch(function(error){
 
-    alert("鏡頭開啟失敗");
+    console.log(error);
+
+    alert(
+        "鏡頭開啟失敗\n" +
+        error.name + "\n" +
+        error.message
+    );
 
 });
 

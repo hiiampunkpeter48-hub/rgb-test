@@ -20,8 +20,12 @@ width="300">
 const video =
 document.getElementById("camera");
 
+
+
 navigator.mediaDevices.getUserMedia({
-    video:true
+    video:{
+        facingMode:"environment"
+    }
 })
 .then(function(stream){
 
@@ -30,15 +34,10 @@ navigator.mediaDevices.getUserMedia({
 })
 .catch(function(error){
 
-    console.log(error);
-
-    alert(
-        "鏡頭開啟失敗\n" +
-        error.name + "\n" +
-        error.message
-    );
+    alert(error.name);
 
 });
+
 
 </script>
 

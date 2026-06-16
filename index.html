@@ -33,11 +33,6 @@ style="display:none;">
 
 <script>
 
-const video =
-document.getElementById("camera");
-
-
-
 navigator.mediaDevices.getUserMedia({
     video:{
         facingMode:"environment"
@@ -71,39 +66,43 @@ document.getElementById("result");
 
 
 
+
 setInterval(function(){
+
+    ctx.drawImage(
+        video,
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+    let pixel =
+    ctx.getImageData(
+        160,
+        120,
+        1,
+        1
+    );
+
+    let r = pixel.data[0];
+    let g = pixel.data[1];
+    let b = pixel.data[2];
+
+    let signal =
+    detectColor(r,g,b);
+
+    result.innerHTML =
+    `
+    R:${r}<br>
+    G:${g}<br>
+    B:${b}<br><br>
+
+    訊號:${signal}
+    `;
 
 },500);
 
-
-
-ctx.drawImage(
-    video,
-    0,
-    0,
-    canvas.width,
-    canvas.height
-);
-
-
-let x = 160;
-let y = 120;
-
-
-let pixel =
-ctx.getImageData(x,y,1,1);
-
-
-let r = pixel.data[0];
-let g = pixel.data[1];
-let b = pixel.data[2];
-
-
-
-result.innerHTML =
-"R:"+r+
-" G:"+g+
-" B:"+b;
 
 
 
@@ -162,3 +161,6 @@ ${signal}
 
 </body>
 </html>
+
+
+

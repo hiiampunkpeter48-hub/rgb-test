@@ -6,7 +6,8 @@
 </head>
 <body>
 
-<h1>我的第一個App</h1>
+<h1>RGB-TEST</h1>
+
 
 <video
 id="camera"
@@ -14,6 +15,21 @@ autoplay
 playsinline
 width="300">
 </video>
+
+
+<canvas
+id="canvas"
+width="320"
+height="240"
+style="display:none;">
+</canvas>
+
+
+<h2 id="result">
+等待辨識...
+</h2>
+
+
 
 <script>
 
@@ -37,6 +53,109 @@ navigator.mediaDevices.getUserMedia({
     alert(error.name);
 
 });
+
+
+
+
+const video =
+document.getElementById("camera");
+
+const canvas =
+document.getElementById("canvas");
+
+const ctx =
+canvas.getContext("2d");
+
+const result =
+document.getElementById("result");
+
+
+
+setInterval(function(){
+
+},500);
+
+
+
+ctx.drawImage(
+    video,
+    0,
+    0,
+    canvas.width,
+    canvas.height
+);
+
+
+let x = 160;
+let y = 120;
+
+
+let pixel =
+ctx.getImageData(x,y,1,1);
+
+
+let r = pixel.data[0];
+let g = pixel.data[1];
+let b = pixel.data[2];
+
+
+
+result.innerHTML =
+"R:"+r+
+" G:"+g+
+" B:"+b;
+
+
+
+function detectColor(r,g,b){
+
+    if(r > 200 && g < 50 && b < 50)
+    {
+        return "A";
+    }
+
+    if(r < 50 && g < 160 && b > 150)
+    {
+        return "B";
+    }
+
+    if(r > 200 && g > 200 && b < 50)
+    {
+        return "C";
+    }
+
+    if(r < 50 && g > 130 && b < 130)
+    {
+        return "D";
+    }
+
+    return "未知";
+}
+
+
+
+let signal =
+detectColor(r,g,b);
+
+result.innerHTML =
+`
+RGB:
+
+${r}
+${g}
+${b}
+
+<br><br>
+
+訊號:
+
+${signal}
+`;
+
+
+
+
+
 
 
 </script>

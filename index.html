@@ -191,16 +191,20 @@ setInterval(function(){
     detectColor(r,g,b);
 
 
-
     //
     // 顯示結果
     //
+    result.innerHTML =
+    `
+    R:${r}<br>
+    G:${g}<br>
+    B:${b}<br><br>
 
-  
-    訊號: ${signal}
+    訊號:${signal}
     `;
 
 },500);
+
 
 
 

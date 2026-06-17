@@ -1,56 +1,78 @@
 <!DOCTYPE html>
+
 <html>
 <head>
+
+```
+<!-- 網頁使用 UTF-8 編碼，避免中文亂碼 -->
 <meta charset="utf-8">
+
+<!-- 瀏覽器頁籤標題 -->
 <title>顏色辨識器</title>
+```
+
 </head>
+
 <body>
+
+<!-- 網頁標題 -->
 
 <h1>RGB-TEST</h1>
 
+<!--
+    顯示手機鏡頭畫面
+
+    id="camera"
+    讓 JavaScript 可以找到這個 video 元件
+
+    autoplay
+    自動播放鏡頭
+
+    playsinline
+    避免手機全螢幕播放
+
+    width="900"
+    畫面寬度
+-->
 
 <video
 id="camera"
 autoplay
 playsinline
-width="300">
-</video>
+width="900"> </video>
 
+<!--
+    Canvas 畫布
+
+    用途：
+    把鏡頭畫面複製進來
+
+    然後讀取像素顏色
+
+    display:none
+    隱藏畫布
+    使用者看不到
+-->
 
 <canvas
 id="canvas"
 width="320"
 height="240"
-style="display:none;">
-</canvas>
+style="display:none;"> </canvas>
 
+<!--
+    顯示 RGB 與辨識結果
+-->
 
 <h2 id="result">
 等待辨識...
 </h2>
 
-
-
 <script>
 
-navigator.mediaDevices.getUserMedia({
-    video:{
-        facingMode:"environment"
-    }
-})
-.then(function(stream){
-
-    video.srcObject = stream;
-
-})
-.catch(function(error){
-
-    alert(error.name);
-
-});
-
-
-
+//
+// 取得 HTML 元件
+//
 
 const video =
 document.getElementById("camera");
@@ -66,96 +88,200 @@ document.getElementById("result");
 
 
 
+//
+// 開啟手機後鏡頭
+//
+
+navigator.mediaDevices.getUserMedia({
+
+    video:{
+
+        // 使用後鏡頭
+        facingMode:"environment"
+
+    }
+
+})
+
+.then(function(stream){
+
+    // 將鏡頭畫面放到 video 元件
+    video.srcObject = stream;
+
+})
+
+.catch(function(error){
+
+    // 開啟失敗顯示錯誤
+    alert(error.name);
+
+});
+
+
+
+//
+// 每 500 毫秒執行一次
+//
+// 500ms = 0.5秒
+//
+// 目的：
+// 持續分析鏡頭畫面
+//
 
 setInterval(function(){
 
+    //
+    // 將目前鏡頭畫面
+    // 畫到 Canvas
+    //
+
     ctx.drawImage(
+
         video,
+
         0,
         0,
+
         canvas.width,
         canvas.height
+
     );
+
+
+
+    //
+    // 取得中央像素
+    //
+    // x = 160
+    // y = 120
+    //
 
     let pixel =
     ctx.getImageData(
+
         160,
         120,
+
         1,
         1
+
     );
+
+
+
+    //
+    // pixel.data:
+    //
+    // [R,G,B,A]
+    //
+    // A = Alpha(透明度)
+    //
 
     let r = pixel.data[0];
     let g = pixel.data[1];
     let b = pixel.data[2];
 
+
+
+    //
+    // 呼叫顏色辨識函式
+    //
+
     let signal =
     detectColor(r,g,b);
 
-    result.innerHTML =
-    `
-    R:${r}<br>
-    G:${g}<br>
-    B:${b}<br><br>
 
-    訊號:${signal}
+
+    //
+    // 顯示結果
+    //
+
+  
+    訊號: ${signal}
     `;
 
 },500);
 
 
 
+//
+// 顏色判斷函式
+//
+// 傳入：
+// r,g,b
+//
+// 回傳：
+// A、B、C、D
+//
 
 function detectColor(r,g,b){
 
-    if(r > 200 && g < 50 && b < 50)
+    //
+    // 紅色
+    //
+
+    if(
+        r > 200 &&
+        g < 50 &&
+        b < 50
+    )
     {
         return "A";
     }
 
-    if(r < 50 && g < 160 && b > 150)
+
+
+    //
+    // 藍色
+    //
+
+    if(
+        r < 50 &&
+        g < 160 &&
+        b > 150
+    )
     {
         return "B";
     }
 
-    if(r > 200 && g > 200 && b < 50)
+
+
+    //
+    // 黃色
+    //
+
+    if(
+        r > 200 &&
+        g > 200 &&
+        b < 50
+    )
     {
         return "C";
     }
 
-    if(r < 50 && g > 130 && b < 130)
+
+
+    //
+    // 綠色
+    //
+
+    if(
+        r < 50 &&
+        g > 130 &&
+        b < 130
+    )
     {
         return "D";
     }
 
+
+
+    //
+    // 都不符合
+    //
+
     return "未知";
 }
-
-
-
-let signal =
-detectColor(r,g,b);
-
-result.innerHTML =
-`
-RGB:
-
-${r}
-${g}
-${b}
-
-<br><br>
-
-訊號:
-
-${signal}
-`;
-
-
-
-
-
-
 
 </script>
 

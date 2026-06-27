@@ -56,8 +56,8 @@ width="900"> </video>
 
 <canvas
 id="canvas"
-width="320"
-height="240"
+width="640"
+height="480"
 style="display:none;"> </canvas>
 
 <!--
@@ -152,15 +152,15 @@ setInterval(function(){
     //
     // 取得中央像素
     //
-    // x = 160
-    // y = 120
+    // x = 320
+    // y = 240
     //
 
     let pixel =
     ctx.getImageData(
 
-        160,
-        120,
+        450,
+        450,
 
         1,
         1
@@ -226,8 +226,8 @@ function detectColor(r,g,b){
 
     if(
         r > 200 &&
-        g < 50 &&
-        b < 50
+        g < 100 &&
+        b < 90
     )
     {
         return "A";
@@ -240,9 +240,9 @@ function detectColor(r,g,b){
     //
 
     if(
-        r < 50 &&
-        g < 160 &&
-        b > 150
+        r < 90 &&
+        g < 180 &&
+        b > 160
     )
     {
         return "B";

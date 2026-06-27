@@ -20,7 +20,7 @@
 <h1>RGB-TEST</h1>
 
 <h2>
-Version 2026-06-27 19:43
+Version 2026-06-27 19:49
 </h2>
 
 
@@ -40,6 +40,21 @@ Version 2026-06-27 19:43
     width="900"
     畫面寬度
 -->
+
+<!-- 透明框校準 -->
+<div style="
+position:absolute;
+left:50%;
+top:50%;
+width:50px;
+height:50px;
+border:3px solid red;
+transform:translate(-50%,-50%);
+pointer-events:none;
+">
+</div>
+
+
 
 <video
 id="camera"
@@ -227,71 +242,58 @@ setInterval(function(){
 function detectColor(r,g,b){
 
     //
-    // 紅色
+    // 黃色
+    // (優先判斷)
     //
-
     if(
-        r > 200 &&
-        g < 100 &&
+        r > 120 &&
+        g > 120 &&
         b < 100
     )
     {
-        return "A";
+        return "C  黃色";
     }
 
-
+    //
+    // 紅色
+    //
+    if(
+        r > g + 40 &&
+        r > b + 40
+    )
+    {
+        return "A  紅色";
+    }
 
     //
     // 藍色
     //
-
     if(
-        r < 90 &&
-        g < 180 &&
-        b > 160
+        b > r + 40 &&
+        b > g + 40
     )
     {
-        return "B";
+        return "B  藍色";
     }
-
-
-
-    //
-    // 黃色
-    //
-
-    if(
-        r > 150 &&
-        g > 150 &&
-        b < 50
-    )
-    {
-        return "C";
-    }
-
-
 
     //
     // 綠色
     //
-
     if(
-        r < 100 &&
-        g > 90 &&
-        b < 140
+        g > r + 40 &&
+        g > b + 40
     )
     {
-        return "D";
+        return "D  綠色";
     }
-
-
 
     //
     // 都不符合
     //
-
     return "未知";
 }
+
+
 
 </script>
 

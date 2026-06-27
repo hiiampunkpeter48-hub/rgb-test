@@ -21,7 +21,7 @@ content="width=device-width, initial-scale=1.0">
 <h1>RGB-TEST</h1>
 
 <h2>
-Version 2026-06-27 20:56
+Version 2026-06-27 21:34
 </h2>
 
 
@@ -63,9 +63,6 @@ Version 2026-06-27 20:56
 </style>
 
 
-
-
-
 <!-- 紅框校準 -->
 <div id="cameraBox">
 
@@ -75,38 +72,26 @@ Version 2026-06-27 20:56
     playsinline>
     </video>
 
-    <div id="targetBox"></div>
+<div id="targetBox"></div>
 
 </div>
 
 
+
+
 <!--
-    顯示手機鏡頭畫面
-
-    id="camera"
-    讓 JavaScript 可以找到這個 video 元件
-
-    autoplay
-    自動播放鏡頭
-
-    playsinline
-    避免手機全螢幕播放
-
-    width="100%"
-    寬度永遠填滿螢幕
-    高度自動維持比例
+    顯示色塊
 -->
-
-<video
-id="camera"
-autoplay
-playsinline
+<div
+id="colorPreview"
 style="
-width:100%;
-max-width:100%;
-height:auto;
+width:120px;
+height:120px;
+border:1px solid black;
+margin:10px auto;
 ">
-</video>
+</div>
+
 
 <!--
     Canvas 畫布
@@ -245,37 +230,77 @@ setInterval(function(){
 
 
 
-    //
-    // 取得中央像素
-    //
-    // x = 160
-    // y = 120
-    //
 
-    let pixel =
-    ctx.getImageData(
+//
+// 取得中央 50×50 區域平均 RGB，同步紅框
+//
 
-        160,
-        120,
+const boxSize = 50;
 
-        1,
-        1
+document.getElementById("targetBox").style.width =
+boxSize + "px";
 
-    );
+document.getElementById("targetBox").style.height =
+boxSize + "px";
 
 
 
-    //
-    // pixel.data:
-    //
-    // [R,G,B,A]
-    //
-    // A = Alpha(透明度)
-    //
+// 中央座標
+const centerX =
+Math.floor(canvas.width / 2);
 
-    let r = pixel.data[0];
-    let g = pixel.data[1];
-    let b = pixel.data[2];
+const centerY =
+Math.floor(canvas.height / 2);
+
+
+// 取得中央區域
+const imageData =
+ctx.getImageData(
+
+    centerX - boxSize / 2,
+    centerY - boxSize / 2,
+
+    boxSize,
+    boxSize
+
+);
+
+
+// RGB總和
+let totalR = 0;
+let totalG = 0;
+let totalB = 0;
+
+
+// 每個像素格式:
+// [R,G,B,A]
+for(
+    let i = 0;
+    i < imageData.data.length;
+    i += 4
+)
+{
+    totalR += imageData.data[i];
+    totalG += imageData.data[i + 1];
+    totalB += imageData.data[i + 2];
+}
+
+
+// 總像素數
+const pixelCount =
+boxSize * boxSize;
+
+
+// 平均RGB
+let r =
+Math.round(totalR / pixelCount);
+
+let g =
+Math.round(totalG / pixelCount);
+
+let b =
+Math.round(totalB / pixelCount);
+
 
 
 
@@ -286,12 +311,17 @@ setInterval(function(){
     let signal =
     detectColor(r,g,b);
 
+// 顯示一個色塊
+document.getElementById("colorPreview").style.backgroundColor =
+`rgb(${r},${g},${b})`;
 
     //
     // 顯示結果
     //
     result.innerHTML =
     `
+分析區域:${boxSize}×${boxSize}<br><br>
+
     R:${r}<br>
     G:${g}<br>
     B:${b}<br><br>
@@ -370,7 +400,12 @@ function detectColor(r,g,b){
 
 
 
+
 </script>
 
 </body>
 </html>
+
+
+
+

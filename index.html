@@ -3,7 +3,6 @@
 <html>
 <head>
 
-```
 <!-- 網頁使用 UTF-8 編碼，避免中文亂碼 -->
 <meta charset="utf-8">
 
@@ -12,7 +11,6 @@ content="width=device-width, initial-scale=1.0">
 
 <!-- 瀏覽器頁籤標題 -->
 <title>顏色辨識器</title>
-```
 
 </head>
 
@@ -23,7 +21,7 @@ content="width=device-width, initial-scale=1.0">
 <h1>RGB-TEST</h1>
 
 <h2>
-Version 2026-06-27 20:32
+Version 2026-06-27 20:56
 </h2>
 
 
@@ -130,21 +128,7 @@ height="240"
 style="display:none;"> </canvas>
 
 
-<!--
-    Canvas尺寸=真實鏡頭尺寸
--->
-video.addEventListener(
-    "loadedmetadata",
-    function(){
 
-        canvas.width =
-        video.videoWidth;
-
-        canvas.height =
-        video.videoHeight;
-
-    }
-);
 
 
 
@@ -175,6 +159,28 @@ canvas.getContext("2d");
 
 const result =
 document.getElementById("result");
+
+
+// 等待鏡頭資訊載入完成，Canvas尺寸=真實鏡頭尺寸
+video.addEventListener(
+    "loadedmetadata",
+    function(){
+
+        canvas.width =
+        video.videoWidth;
+
+        canvas.height =
+        video.videoHeight;
+
+        console.log(
+            "Canvas尺寸:",
+            canvas.width,
+            canvas.height
+        );
+
+    }
+);
+
 
 
 

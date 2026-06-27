@@ -152,15 +152,15 @@ setInterval(function(){
     //
     // 取得中央像素
     //
-    // x = 320
-    // y = 240
+    // x = 160
+    // y = 120
     //
 
     let pixel =
     ctx.getImageData(
 
-        320,
-        240,
+        160,
+        120,
 
         1,
         1
@@ -226,8 +226,8 @@ function detectColor(r,g,b){
 
     if(
         r > 200 &&
-        g < 100 &&
-        b < 90
+        g < 50 &&
+        b < 50
     )
     {
         return "A";
@@ -240,9 +240,9 @@ function detectColor(r,g,b){
     //
 
     if(
-        r < 90 &&
-        g < 180 &&
-        b > 160
+        r < 50 &&
+        g < 160 &&
+        b > 150
     )
     {
         return "B";

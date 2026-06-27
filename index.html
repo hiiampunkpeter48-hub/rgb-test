@@ -7,6 +7,9 @@
 <!-- 網頁使用 UTF-8 編碼，避免中文亂碼 -->
 <meta charset="utf-8">
 
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
 <!-- 瀏覽器頁籤標題 -->
 <title>顏色辨識器</title>
 ```
@@ -20,9 +23,63 @@
 <h1>RGB-TEST</h1>
 
 <h2>
-Version 2026-06-27 19:49
+Version 2026-06-27 20:32
 </h2>
 
+
+<style>
+
+#cameraBox{
+
+    position:relative;
+
+    width:100%;
+
+}
+
+#camera{
+
+    width:100%;
+
+    display:block;
+
+}
+
+#targetBox{
+
+    position:absolute;
+
+    width:50px;
+    height:50px;
+
+    border:3px solid red;
+
+    left:50%;
+    top:50%;
+
+    transform:translate(-50%,-50%);
+
+    pointer-events:none;
+}
+
+</style>
+
+
+
+
+
+<!-- 紅框校準 -->
+<div id="cameraBox">
+
+    <video
+    id="camera"
+    autoplay
+    playsinline>
+    </video>
+
+    <div id="targetBox"></div>
+
+</div>
 
 
 <!--
@@ -37,30 +94,21 @@ Version 2026-06-27 19:49
     playsinline
     避免手機全螢幕播放
 
-    width="900"
-    畫面寬度
+    width="100%"
+    寬度永遠填滿螢幕
+    高度自動維持比例
 -->
-
-<!-- 透明框校準 -->
-<div style="
-position:absolute;
-left:50%;
-top:50%;
-width:50px;
-height:50px;
-border:3px solid red;
-transform:translate(-50%,-50%);
-pointer-events:none;
-">
-</div>
-
-
 
 <video
 id="camera"
 autoplay
 playsinline
-width="900"> </video>
+style="
+width:100%;
+max-width:100%;
+height:auto;
+">
+</video>
 
 <!--
     Canvas 畫布
@@ -80,6 +128,27 @@ id="canvas"
 width="320"
 height="240"
 style="display:none;"> </canvas>
+
+
+<!--
+    Canvas尺寸=真實鏡頭尺寸
+-->
+video.addEventListener(
+    "loadedmetadata",
+    function(){
+
+        canvas.width =
+        video.videoWidth;
+
+        canvas.height =
+        video.videoHeight;
+
+    }
+);
+
+
+
+
 
 <!--
     顯示 RGB 與辨識結果
@@ -224,7 +293,7 @@ setInterval(function(){
     訊號:${signal}
     `;
 
-},500);
+},100);
 
 
 
@@ -258,8 +327,8 @@ function detectColor(r,g,b){
     // 紅色
     //
     if(
-        r > g + 40 &&
-        r > b + 40
+        r > g + 30 &&
+        r > b + 30
     )
     {
         return "A  紅色";
@@ -269,8 +338,8 @@ function detectColor(r,g,b){
     // 藍色
     //
     if(
-        b > r + 40 &&
-        b > g + 40
+        b > r + 30 &&
+        b > g + 30
     )
     {
         return "B  藍色";
@@ -280,8 +349,8 @@ function detectColor(r,g,b){
     // 綠色
     //
     if(
-        g > r + 40 &&
-        g > b + 40
+        g > r + 30 &&
+        g > b + 30
     )
     {
         return "D  綠色";
@@ -299,6 +368,3 @@ function detectColor(r,g,b){
 
 </body>
 </html>
-
-
-
